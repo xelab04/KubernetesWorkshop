@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ clusterName }}-nodeport
+  namespace: {{ namespace }}
+spec:
+  selector:
+    app: {{ shortClusterName }}#vcluster
+    release: {{ clusterName }}#my-vcluster
+  ports:
+    - name: https
+      port: 443
+      targetPort: {{ nodePort }}
+      protocol: TCP
+  type: NodePort
