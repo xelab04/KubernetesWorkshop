@@ -33,7 +33,7 @@ def switch_context():
     print("Switched back to the default cluster context.")
 
 
-def get_kubeconfig(cluster_name: str) -> None:
+def get_kubeconfig(cluster_name: str) -> str:
     """Retrieve and decode the kubeconfig for the vcluster."""
     print(f"Retrieving kubeconfig for vcluster '{cluster_name}'...")
     secret_name = f"vc-{cluster_name}"
