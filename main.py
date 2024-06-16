@@ -13,7 +13,7 @@ def create_vcluster_endpoint(cluster_name):
     try:
         nodePort = GetServices.main()
         kubeconfig_path = CreateCluster.main(cluster_name)
-        return send_file(kubeconfig_path, as_attachment=True, attachment_filename=f"kubeconfig-{cluster_name}.yaml")
+        return send_file(kubeconfig_path, as_attachment=True, download_name=f"kubeconfig-{cluster_name}.yaml")
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
