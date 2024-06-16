@@ -8,12 +8,12 @@ def run_command(command):
     return result.stdout.decode().strip()
 
 
-def create_vcluster(cluster_name, timeout=40):
+def create_vcluster(cluster_name, timeout=10):
     """Create a vcluster and terminate the command after a timeout."""
     print(f"Creating vcluster '{cluster_name}'...")
     proc = subprocess.Popen(f"vcluster create {cluster_name} --connect=false", shell=True, stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
-    """
+
     try:
         proc.communicate(timeout=timeout)
     except subprocess.TimeoutExpired:
@@ -23,7 +23,7 @@ def create_vcluster(cluster_name, timeout=40):
         print(f"vcluster '{cluster_name}' created successfully.")
     else:
         print(f"vcluster '{cluster_name}' creation command terminated with code {proc.returncode}.")
-    """
+
 
 
 def switch_context():
@@ -48,6 +48,7 @@ def get_kubeconfig(cluster_name: str) -> None:
         f.write(decoded_kubeconfig)
 
     print(f"Kubeconfig for vcluster '{cluster_name}' saved to '{kubeconfig_path}'.")
+    return kubeconfig_path
 
 
 def main(cluster_name):
