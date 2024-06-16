@@ -11,8 +11,9 @@ def run_command(command):
 def create_vcluster(cluster_name, timeout=40):
     """Create a vcluster and terminate the command after a timeout."""
     print(f"Creating vcluster '{cluster_name}'...")
-    proc = subprocess.Popen(f"vcluster create {cluster_name}", shell=True, stdout=subprocess.PIPE,
+    proc = subprocess.Popen(f"vcluster create {cluster_name} --connect=false", shell=True, stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
+    """
     try:
         proc.communicate(timeout=timeout)
     except subprocess.TimeoutExpired:
@@ -22,6 +23,7 @@ def create_vcluster(cluster_name, timeout=40):
         print(f"vcluster '{cluster_name}' created successfully.")
     else:
         print(f"vcluster '{cluster_name}' creation command terminated with code {proc.returncode}.")
+    """
 
 
 def switch_context():
