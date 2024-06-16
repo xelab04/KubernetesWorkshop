@@ -11,7 +11,7 @@ def run_command(command):
 def create_vcluster(cluster_name, timeout=10):
     """Create a vcluster and terminate the command after a timeout."""
     print(f"Creating vcluster '{cluster_name}'...")
-    proc = subprocess.Popen(f"vcluster create {cluster_name} --connect=false", shell=True, stdout=subprocess.PIPE,
+    proc = subprocess.Popen(f"vcluster create {cluster_name} --connect=false -f values.yaml", shell=True, stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
 
     try:
@@ -23,7 +23,6 @@ def create_vcluster(cluster_name, timeout=10):
         print(f"vcluster '{cluster_name}' created successfully.")
     else:
         print(f"vcluster '{cluster_name}' creation command terminated with code {proc.returncode}.")
-
 
 
 def switch_context():
@@ -38,21 +37,26 @@ def get_kubeconfig(cluster_name: str) -> str:
     print(f"Retrieving kubeconfig for vcluster '{cluster_name}'...")
     secret_name = f"vc-{cluster_name}"
     namespace = f"vcluster-{cluster_name}"
-    encoded_kubeconfig = run_command(
-        f"kubectl get secret {secret_name} -n {namespace}" + " --template={{.data.config}}")
+
+    """
+    encoded_kubeconfig = run_command(f"kubectl get secret {secret_name} -n {namespace}" + " --template={{.data.config}}")
     print(encoded_kubeconfig)
     decoded_kubeconfig = base64.b64decode(encoded_kubeconfig).decode('utf-8')
-
     kubeconfig_path = f"./kubeconfig-{cluster_name}"
+
     with open(kubeconfig_path, "w") as f:
         f.write(decoded_kubeconfig)
+    """
+
+    kubeconfig_path = './kubeconfig.yaml'
+    run_command(f"vcluster connect {cluster_name} -n {namespace} --print --server=https://102.222.107.102 > ./kubeconfig.yaml")
 
     print(f"Kubeconfig for vcluster '{cluster_name}' saved to '{kubeconfig_path}'.")
     return kubeconfig_path
 
 
 def main(cluster_name):
-    #cluster_name = "test-cluster"
+    # cluster_name = "test-cluster"
     create_vcluster(cluster_name)
     switch_context()
     return get_kubeconfig(cluster_name)
