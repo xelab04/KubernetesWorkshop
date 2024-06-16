@@ -1,8 +1,9 @@
 import base64
+from posixpath import basename
 import subprocess
+import argparse
 
-
-def run_command(command):
+def _run_command(command):
     """Run a shell command and return its output."""
     result = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     return result.stdout.decode().strip()
@@ -29,16 +30,16 @@ def create_vcluster(cluster_name, timeout=10):
 def switch_context():
     """Switch back to the default context."""
     print("Switching back to the default cluster context...")
-    run_command("kubectl config use-context default")
+    _run_command("kubectl config use-context default")
     print("Switched back to the default cluster context.")
 
 
-def get_kubeconfig(cluster_name: str) -> str:
+def get_kubeconfig_path(cluster_name: str) -> str:
     """Retrieve and decode the kubeconfig for the vcluster."""
     print(f"Retrieving kubeconfig for vcluster '{cluster_name}'...")
     secret_name = f"vc-{cluster_name}"
     namespace = f"vcluster-{cluster_name}"
-    encoded_kubeconfig = run_command(
+    encoded_kubeconfig = _run_command(
         f"kubectl get secret {secret_name} -n {namespace}" + " --template={{.data.config}}")
     print(encoded_kubeconfig)
     decoded_kubeconfig = base64.b64decode(encoded_kubeconfig).decode('utf-8')
@@ -51,8 +52,13 @@ def get_kubeconfig(cluster_name: str) -> str:
     return kubeconfig_path
 
 
-def main(cluster_name):
-    #cluster_name = "test-cluster"
-    create_vcluster(cluster_name)
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(basename(__file__), \
+        description="Create a vcluster and retrieve its kubeconfig.")
+    parser.add_argument("cluster_name", help="To specify a cluster name.", type=str)
+    args = parser.parse_args()
+
+    create_vcluster(args.cluster_name)
     switch_context()
-    return get_kubeconfig(cluster_name)
+    print(get_kubeconfig_path(args.cluster_name))
