@@ -48,8 +48,8 @@ def get_kubeconfig(cluster_name: str) -> str:
         f.write(decoded_kubeconfig)
     """
 
-    kubeconfig_path = './kubeconfig.yaml'
-    run_command(f"vcluster connect {cluster_name} -n {namespace} --print --server=https://102.222.107.102 > ./kubeconfig.yaml")
+    kubeconfig_path = f'./kubeconfig-{cluster_name}.yaml'
+    run_command(f"vcluster connect {cluster_name} -n {namespace} --print --server=https://102.222.107.102 > ./kubeconfig-{cluster_name}.yaml")
 
     print(f"Kubeconfig for vcluster '{cluster_name}' saved to '{kubeconfig_path}'.")
     return kubeconfig_path

@@ -5,11 +5,12 @@ metadata:
   namespace: {{ namespace }}
 spec:
   selector:
-    app: {{ shortClusterName }}#vcluster
-    release: {{ clusterName }}#my-vcluster
+    app: vcluster #{{ shortClusterName }}#vcluster
+    release: {{ clusterName }}
   ports:
     - name: https
       port: 443
-      targetPort: {{ nodePort }}
+      targetPort: 443
+      nodePort: {{ nodePort }}
       protocol: TCP
   type: NodePort
