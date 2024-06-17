@@ -24,7 +24,7 @@ def create_vcluster_endpoint(cluster_name):
 
         create_vcluster(cluster_name)
         switch_context()
-        kubeconfig_path = get_kubeconfig(cluster_name)
+        kubeconfig_path = get_kubeconfig(cluster_name, nodePort)
         return send_file(kubeconfig_path, as_attachment=True, download_name=f"kubeconfig-{cluster_name}.yaml")
     except Exception as e:
         return jsonify({"error": str(e)}), 500

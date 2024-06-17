@@ -32,7 +32,7 @@ def switch_context():
     print("Switched back to the default cluster context.")
 
 
-def get_kubeconfig(cluster_name: str) -> str:
+def get_kubeconfig(cluster_name: str, nodeport) -> str:
     """Retrieve and decode the kubeconfig for the vcluster."""
     print(f"Retrieving kubeconfig for vcluster '{cluster_name}'...")
     secret_name = f"vc-{cluster_name}"
@@ -49,14 +49,14 @@ def get_kubeconfig(cluster_name: str) -> str:
     """
 
     kubeconfig_path = f'./kubeconfig-{cluster_name}.yaml'
-    run_command(f"vcluster connect {cluster_name} -n {namespace} --print --server=https://102.222.107.102 > ./kubeconfig-{cluster_name}.yaml")
+    run_command(f"vcluster connect {cluster_name} -n {namespace} --print --server=https://102.222.107.102:{nodeport} > ./kubeconfig-{cluster_name}.yaml")
 
     print(f"Kubeconfig for vcluster '{cluster_name}' saved to '{kubeconfig_path}'.")
     return kubeconfig_path
 
 
-def main(cluster_name):
+def main(cluster_name, nodeport):
     # cluster_name = "test-cluster"
     create_vcluster(cluster_name)
     switch_context()
-    return get_kubeconfig(cluster_name)
+    return get_kubeconfig(cluster_name, nodeport)
