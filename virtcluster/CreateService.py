@@ -1,5 +1,6 @@
 from jinja2 import Template
 import subprocess
+import time
 
 # Define the Jinja2 template
 template_str = """
@@ -44,5 +45,8 @@ def main(clusterName, namespace, nodePort):
   
   print(f"Template rendered and saved to nodeport-service-{clusterName}.yaml")
   print("Applying kubernetes manifest for nodeport service")
+
+  print(run_command(f"kubectl create namespace {namespace}"))
+  time.sleep(2)
   run_command(f"kubectl apply -f nodeport-service-{clusterName}.yaml")
 

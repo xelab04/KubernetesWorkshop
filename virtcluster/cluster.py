@@ -8,11 +8,11 @@ def run_command(command):
     return result.stdout.decode().strip()
 
 
-def create_vcluster(cluster_name, timeout=10):
+def create_vcluster(cluster_name, timeout=40):
     """Create a vcluster and terminate the command after a timeout."""
     print(f"Creating vcluster '{cluster_name}'...")
-    proc = subprocess.Popen(f"vcluster create {cluster_name} --connect=false -f values.yaml", shell=True, stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE)
+    print(f"DEBUG: vcluster create {cluster_name} --connect=false -f values.yaml")
+    proc = subprocess.Popen(f"vcluster create {cluster_name} --connect=false -f values.yaml", shell=True, stdout=subprocess.PIPE,stderr=subprocess.PIPE)
 
     try:
         proc.communicate(timeout=timeout)
@@ -36,7 +36,7 @@ def get_kubeconfig(cluster_name: str) -> str:
     """Retrieve and decode the kubeconfig for the vcluster."""
     print(f"Retrieving kubeconfig for vcluster '{cluster_name}'...")
     secret_name = f"vc-{cluster_name}"
-    namespace = f"vcluster-{cluster_name}"
+    namespace = f"vcluster-{cluster_name}".lower()
 
     """
     encoded_kubeconfig = run_command(f"kubectl get secret {secret_name} -n {namespace}" + " --template={{.data.config}}")

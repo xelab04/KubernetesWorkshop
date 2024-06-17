@@ -1,0 +1,17 @@
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodecluster-nodeport
+  namespace: vcluster-nodecluster
+spec:
+  selector:
+    app: vcluster ##vcluster
+    release: nodecluster
+  ports:
+    - name: https
+      port: 443
+      targetPort: 443
+      nodePort: 31293
+      protocol: TCP
+  type: NodePort
