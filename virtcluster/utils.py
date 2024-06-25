@@ -3,7 +3,7 @@ import pprint
 import random
 # Configs can be set in Configuration class directly or using helper utility
 
-def get_list_nodes_used():
+def _get_list_nodes_used():
     config.load_kube_config()
     
     v1 = client.CoreV1Api()
@@ -16,9 +16,8 @@ def get_list_nodes_used():
     nodes_used = [svc.spec.ports[0].node_port for svc in ret.items]
     return nodes_used
         
-def main():
-    
-    nodes_used = get_list_nodes_used()
+def get_available_node_port():
+    nodes_used = _get_list_nodes_used()
     while True:
         new_node_port = random.randint(30005, 32767)
         if new_node_port not in nodes_used:
@@ -26,4 +25,8 @@ def main():
     
         
 if __name__ == "__main__":
-    main()
+    nodes_used = get_list_nodes_used()
+    while True:
+        new_node_port = random.randint(30005, 32767)
+        if new_node_port not in nodes_used:
+            print(new_node_port)
