@@ -1,7 +1,7 @@
 from flask import Flask, send_file, jsonify
 from virtcluster.cluster import create_vcluster, switch_context, get_kubeconfig
-import virtcluster.CreateService as CreateService
-import virtcluster.GetServices as GetServices
+from virtcluster import service
+from virtcluster.utils import get_available_node_port
 
 import subprocess
 import os
@@ -17,9 +17,9 @@ def create_vcluster_endpoint(cluster_name):
         namespace = f"vcluster-{cluster_name}".lower()
         cluster_name = cluster_name.lower()
         print("Getting free nodeport")
-        nodePort = GetServices.main()
+        nodePort = get_available_node_port()
         print(f"Creating service with exposed port {nodePort}")
-        CreateService.main(cluster_name, namespace, nodePort)
+        service.create(cluster_name, namespace, nodePort)
         print("Service created")
 
         create_vcluster(cluster_name)

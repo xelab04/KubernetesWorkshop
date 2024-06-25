@@ -29,28 +29,30 @@ def run_command(command):
     return result.stdout.decode().strip()
 
 
-def main(clusterName, namespace, nodePort):
+def create(clsuter_name, namespace, node_port):
   data = {
-    "clusterName": clusterName,
+    "clusterName": clsuter_name,
     "namespace": namespace,
-    "nodePort": nodePort
+    "nodePort": node_port
   }
   
   template = Template(template_str)
   
   rendered_str = template.render(data)
   
-  with open(f"nodeport-service-{clusterName}.yaml", "w") as f:
+  with open(f"nodeport-service-{clsuter_name}.yaml", "w") as f:
     f.write(rendered_str)
   
-  print(f"Template rendered and saved to nodeport-service-{clusterName}.yaml")
+  print(f"Template rendered and saved to nodeport-service-{clsuter_name}.yaml")
   print("Applying kubernetes manifest for nodeport service")
 
   try:
     print(run_command(f"kubectl create namespace {namespace}"))
     #time.sleep(2)
-    run_command(f"kubectl apply -f nodeport-service-{clusterName}.yaml")
+    run_command(f"kubectl apply -f nodeport-service-{clsuter_name}.yaml")
   except:
     raise KeyError("the namespace is probably already in use, aborting")
 
 
+if __name__ == "__main__":
+  pass
