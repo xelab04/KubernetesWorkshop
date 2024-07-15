@@ -9,11 +9,21 @@ def get_list_nodes_used():
     v1 = client.CoreV1Api()
     print("Listing pods with their IPs:")
     ret = v1.list_service_for_all_namespaces(watch=False)
-    
+        
     service_dict = ret.to_dict()
     pprint.pprint(service_dict.keys())
 
-    nodes_used = [svc.spec.ports[0].node_port for svc in ret.items]
+    nodes_used = []
+    for svc in ret.items:
+        try:
+            port = svc.spec.ports[0].node_port
+            if port != None:
+                nodes_used.append(port)
+            
+        except:
+            pprint.pprint(svc.spec)
+
+    #nodes_used = [svc.spec.ports[0].node_port for svc in ret.items]
     return nodes_used
         
 def main():

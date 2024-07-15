@@ -4,3 +4,12 @@ controlPlane:
     - 102.222.107.102
     - 102.222.107.103
     - 102.222.107.104
+
+  distro:
+    k3s:
+      enabled: true
+
+      #sync:
+      #  fromHost:
+      #    nodes:
+      #      enabled: true

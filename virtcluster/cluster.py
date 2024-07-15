@@ -1,12 +1,23 @@
 import base64
 import subprocess
+import aiosubprocess
 
+'''
+async def run_command(command):
+    """Run a shell command and return its output."""
+    #result = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    #return result.stdout.decode().strip()
+
+    process = await aiosubprocess.create_subprocess_shell(
+        command, stdout=aiosubprocess.PIPE, stderr=aiosubprocess.PIPE
+    )
+    stdout, stderr = await process.communicate()
+    return stdout.decode().strip()
+'''
 
 def run_command(command):
-    """Run a shell command and return its output."""
     result = subprocess.run(command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     return result.stdout.decode().strip()
-
 
 def create_vcluster(cluster_name, timeout=40):
     """Create a vcluster and terminate the command after a timeout."""
